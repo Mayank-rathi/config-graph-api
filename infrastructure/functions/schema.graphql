@@ -1,0 +1,174 @@
+scalar Date
+type Query {
+  getConfigByName(
+    bussinessEntity: String
+    configCategoryName: String
+    configurationName: String
+  ): BusinessEntityConfigs
+}
+
+type Mutation {
+  AddBussinessEntity(businessEntity: BusinessEntityInput): String
+  AddBussinessEntityWithConfig(businessEntity: BusinessEntityConfigsInput): String
+  AddOwner(ownerName: String): String
+
+  DeleteOwner(ownerId: String): String
+  DeleteBussinessEntity(businessEntityId: BusinessEntityInputForDelete): String
+  DeleteBussinessEntityWithConfig(configurationCategory: ConfigurationCategoryForDelete): String
+  DeleteConfigurationProperty(deleteConfigurationProperty: DeleteConfigurationProperty): String
+
+  UpdateBussinessEntity(businessEntityInputForUpdate: BusinessEntityInputForUpdate): String
+  UpdateCategory(categoryInputForUpdate:CategoryInputForUpdate):String
+  UpdateConfigurationProperty(configurationInputForUpdate: ConfigurationInputForUpdate): String
+ 
+}
+
+
+
+type BusinessEntity {
+  type: String
+  properties: [Property]
+  id: String
+}
+
+input BusinessEntityInput {
+  type: String
+  properties: [PropertyInput]
+  id: String
+}
+
+type BusinessEntityConfigs {
+  id: String
+  owner: String
+  configCategories: [ConfigurationCategory]
+  properties: [Property]
+  type: String
+}
+
+type ConfigurationCategory {
+  name: String!
+  type: String
+  owner: String
+  properties: [Property]
+  configs: [Configuration]
+  id: String
+  subcategories: [ConfigurationCategory]
+}
+
+input ConfigurationCategoryInput {
+  name: String!
+  type: String
+  owner: String
+  properties: [PropertyInput]
+  configs: [ConfigurationInput]
+  id: String
+  startDate:Date
+  endDate:Date
+  subcategories: [ConfigurationCategoryInput]
+}
+
+type Configuration {
+  name: String
+  value: String
+  id: String
+}
+
+input ConfigurationInput {
+  name: String
+  value: String
+  id: String
+}
+
+input BusinessEntityConfigsInput {
+  id: String
+  owner: String
+  configCategories: [ConfigurationCategoryInput]
+}
+
+input PropertyInput {
+  name: String
+  value: String
+}
+
+type Property {
+  name: String
+  value: String
+  id: String
+}
+
+type Owner {
+  id: String
+  name: String
+}
+
+input OwnerInput {
+  id: String
+  name: String
+}
+
+type ConfigurationCategory {
+  name: String
+  type: String
+  owner: String
+  rules: [Rule]
+  configs: [Configuration]
+  id: String
+}
+
+type Rule {
+  name: String
+  value: String
+  id: String
+}
+
+input RuleInput {
+  name: String
+  value: String
+}
+
+input BusinessEntityInputForDelete{
+  ownerId: String,
+  businessEntityId:String
+}
+
+input ConfigurationCategoryForDelete{
+  ownerId: String,
+  configurationCategoryId:String
+}
+
+input DeleteConfigurationProperty {
+  ownerId: String,
+  configurationId: String!
+  properties: [PropertyInputForDelete]
+}
+
+input PropertyInputForDelete {
+  id: String
+  name: String
+}
+
+input ConfigurationInputForUpdate {
+  ownerId: String
+  configurationId: String
+  properties: [PropertyInputForUpdateConfiguration]
+}
+
+input PropertyInputForUpdateConfiguration {
+  currentPropertyName: String
+  name: String
+  value: String
+}
+
+input BusinessEntityInputForUpdate{
+  ownerId: String,
+  businessEntityId:String,
+  properties: [PropertyInputForUpdateConfiguration]
+}
+
+
+input CategoryInputForUpdate{
+  ownerId: String,
+  categoryId:String,
+  properties: [PropertyInputForUpdateConfiguration]
+}
+

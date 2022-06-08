@@ -1,0 +1,41 @@
+name: $(Build.SourceBranchName)_$(Rev:r)
+trigger: none
+
+pool:
+  name: Portal21
+#Your build pipeline references the ‘environment’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+
+parameters:
+- name: environment
+  displayName: CWP environment
+  type: string
+  default: Please select environment
+  values:
+  - Please select environment
+  - dev
+  - ts1
+  - ts2
+  - ts3
+  - stg
+  - prf
+  - cte
+
+steps:
+- task: NodeTool@0
+  displayName: 'Installing Node 14.0.0'
+  inputs:
+    versionSpec: '14.0.0'
+
+- bash: |
+   npm config set registry https://repo1.uhc.com/artifactory/api/npm/npm-virtual
+   npm install
+   npm run build:prod
+  displayName: 'Application build'
+
+- task: AzureFunctionApp@1
+  displayName: 'Azure Function App Deployment: config-graph-${{ parameters.environment }}-us-c-fn'
+  inputs:
+    azureSubscription: MemberPortalNonProdServicePrincipalConnection
+    appType: functionAppLinux
+    appName: 'config-graph-${{ parameters.environment }}-us-c-fn'
+    package: infrastructure/functions

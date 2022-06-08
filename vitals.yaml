@@ -1,0 +1,8 @@
+apiVersion: v1
+metadata:
+  askId: UHGWM110-017204
+  caAgileId: 179155246796d
+  projectKey: com.optum.rx.cwp:config-graph-api
+  projectFriendlyName: CWP-config-graph-api
+  componentType: code
+  targetQG: GATE_08

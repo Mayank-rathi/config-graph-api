@@ -1,0 +1,86 @@
+name: $(Rev:r)
+trigger:
+- master
+- rel_*
+pr:
+- master
+- rel_*
+
+pool:
+  name: Portal21
+
+steps:
+- task: NodeTool@0
+  displayName: 'Installing Node 14.0.0'
+  inputs:
+    versionSpec: '14.0.0'
+
+- task: sonarsource.sonarqube.15B84CA1-B62F-4A2A-A403-89B77A063157.SonarQubePrepare@5
+  displayName: 'Prepare analysis on SonarQube'
+  inputs:
+    SonarQube: 'Sonar Connection'
+    scannerMode: CLI
+  enabled: false
+
+- bash: |
+   echo 'Install dependencies and building application'
+   npm config set registry https://repo1.uhc.com/artifactory/api/npm/npm-virtual
+   npm install
+   npm run build:prod
+  displayName: 'npm build check'
+
+- bash: |
+   echo 'test coverage check'
+   npm test
+  displayName: 'test coverage check'
+  enabled: false
+
+- bash: |
+   echo 'lint check'
+   npm run lint
+  displayName: 'lint check'
+  enabled: false
+
+- task: sonarsource.sonarqube.6D01813A-9589-4B15-8491-8164AEB38055.SonarQubeAnalyze@5
+  displayName: 'Run Code Analysis'
+  enabled: false
+
+- task: sonarsource.sonarqube.291ed61f-1ee4-45d3-b1b0-bf822d9095ef.SonarQubePublish@5
+  displayName: 'Publish Quality Gate Result'
+  enabled: false
+
+- task: AzureFunctionApp@1
+  displayName: 'ts1 : Azure Function App Deployment'
+  inputs:
+    azureSubscription: MemberPortalNonProdServicePrincipalConnection
+    appType: functionAppLinux
+    appName: 'config-graph-ts1-us-c-fn'
+    package: infrastructure/functions
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'master'))
+
+- task: AzureFunctionApp@1
+  displayName: 'ts2 : Azure Function App Deployment'
+  inputs:
+    azureSubscription: MemberPortalNonProdServicePrincipalConnection
+    appType: functionAppLinux
+    appName: 'config-graph-ts2-us-c-fn'
+    package: infrastructure/functions
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'master'))
+
+- task: AzureFunctionApp@1
+  displayName: 'ts3 : Azure Function App Deployment'
+  inputs:
+    azureSubscription: MemberPortalNonProdServicePrincipalConnection
+    appType: functionAppLinux
+    appName: 'config-graph-ts3-us-c-fn'
+    package: infrastructure/functions
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'master'))
+
+- task: AzureFunctionApp@1
+  displayName: 'prf : Azure Function App Deployment'
+  inputs:
+    azureSubscription: MemberPortalNonProdServicePrincipalConnection
+    appType: functionAppLinux
+    appName: 'config-graph-prf-us-c-fn'
+    package: infrastructure/functions
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'master'))

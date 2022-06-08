@@ -1,0 +1,23 @@
+export const partitionKey: String = process.env['GREMLIN_DB_PARTITION_KEY'];
+export const skyLineOwnerID: String = process.env['SKYLINE_OWNER_ID'];
+export const skyLineOwnerName: String = process.env['SKYLINE_OWNER'];
+export const cagIngestionOwnerID: String = process.env['CAG_INGESTION_LOADER_OWNER_ID'];
+export const cagIngestionOwnerName: String = process.env['CAG_INGESTION_LOADER_OWNER'];
+
+export const configCategoryType: String = 'ConfigurationCategory';
+export const configurationType: String = "Configuration"
+export const idPlaceHolder = 'id';
+export const namePlaceholder = 'name';
+export const valuePlaceHolder = 'value';
+export const propertiesPlaceHolder = 'properties';
+export const subcategoriesPlaceholder = 'subcategories';
+export const configsPlaceHolder = 'configs';
+export const typePlaceholder = 'type';
+export const ownerPlaceHolder = 'owner';
+export const bussinessEntityPlaceHolder: String = "BussinessEntity"
+export const ownersPlaceHolder = 'Owners';
+export const configurationCategoryPlaceHolder: String = "ConfigurationCategory"
+export const configurationPlaceHolder: String = "Configuration"
+export const isDeletedPlaceHolder = 'isDeleted';
+export const InvalidInputPlaceHolder = 'Invalid Input';
+export const SuccessfulPlaceHolder = 'Successful';

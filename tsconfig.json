@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "outDir": "infrastructure/functions/dist",
+    "rootDir": "infrastructure/functions/",
+    "sourceMap": true,
+    "strict": false,
+    "esModuleInterop": true
+  }
+}
